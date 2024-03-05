@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Оставить отзыв</h2>
+        <p>Продукт:</p>
+        <input class="productname-input" type="text" placeholder="Введите название продукта" />
+        <p>Отзыв:</p>
+        <textarea class="user-comment" rows="4" cols="50" placeholder="Оставьте комментарий здесь"></textarea>
+        <button class="button-comment">Оставить комментарий</button>
+        <h4 class="error-message"></h4>
+        <a href="./reviews.html">Страница с отзывами</a>
+    </div>
+    <script>
+        const inputProductName = document.querySelector(
+            '.productname-input'
+        );
+        const inputProductComm =
+            document.querySelector('.user-comment');
+        const buttonComm = document.querySelector('.button-comment');
+        const messageError = document.querySelector('.error-message');
+
+        buttonComm.addEventListener('click', () => {
+            const product = inputProductName.value;
+            const comment = inputProductComm.value;
+            const arr = [];
+            try {
+                if (
+                    comment.length < 10 ||
+                    comment.length > 100 ||
+                    product.length < 5
+                ) {
+                    throw new Error('Некорректная длина текста');
+                }
+
+                let reviewsList =
+                    JSON.parse(localStorage.getItem(product)) || [];
+                console.log(reviewsList);
+                reviewsList.push(comment);
+
+                localStorage.setItem(product, JSON.stringify(reviewsList));
+
+                messageError.textContent = 'Ваш отзыв сохранен';
+                messageError.style.color = 'green';
+                setTimeout(() => {
+                    messageError.textContent = '';
+                }, 2000);
+            } catch (error) {
+                messageError.textContent = error.message;
+                messageError.style.color = 'red';
+            } finally {
+                console.log('Попытка');
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Список продуктов</h2>
+        <ul class="productname-list"></ul>
+        <a href="./index.html">Добавить отзыв</a>
+    </div>
+    <script>
+        const array = [];
+        Object.keys(localStorage).forEach((key) => {
+            object = {
+                product: key,
+                review: JSON.parse(localStorage.getItem(key)),
+            };
+            array.push(object);
+        });
+        console.log(array);
+
+        const listComm = document.querySelector('.productname-list');
+        startPage = (arr) => {
+            for (const iterator1 of arr) {
+                const productName = document.createElement('li');
+                const commentList = document.createElement('ul');
+                commentList.classList.add('product-comment');
+                productName.classList.add('product-name');
+                productName.innerHTML = `<h4 class="product-name_title">${iterator1.product}</h4>`;
+                listComm.appendChild(productName);
+                productName.appendChild(commentList);
+                for (const iterator2 of iterator1.review) {
+                    const commentText = document.createElement('li');
+                    commentText.classList.add('comment-text');
+                    commentText.innerHTML = `<p>text: <span class="product-name_text">${iterator2}</span></p><button class="delete">Удалить</button>`;
+                    commentList.appendChild(commentText);
+                }
+            }
+        };
+
+        startPage(array);
+
+        const btnName = document.querySelectorAll('.product-name');
+        const listProductComment = document.querySelectorAll(
+            '.product-comment'
+        );
+
+        const comment = document.querySelectorAll('.comment-text');
+        const btnRemoveComment = document.querySelectorAll('.delete');
+
+        btnName.forEach((item) => {
+            item.addEventListener('click', (event) => {
+                let childrenContainer =
+                    event.target.parentNode.querySelector('.product-comment');
+                console.log(childrenContainer);
+                if (!childrenContainer) return;
+                childrenContainer.hidden = !childrenContainer.hidden;
+            });
+        });
+
+        btnRemoveComment.forEach((el) => {
+            el.addEventListener('click', (event) => {
+                let title =
+                    event.target.parentNode.parentNode.previousElementSibling
+                        .innerHTML;
+                localStorage.removeItem(title);
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+
+</html>
